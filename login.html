@@ -33,7 +33,7 @@
       <div id="form-login">
         <div class="form-group">
           <label class="form-label">Email</label>
-          <input class="form-input" type="email" id="login-email" placeholder="your@email.com" autocomplete="email" />
+          <input class="form-input" type="email" id="login-email (personal pls- preferably not your school email)" placeholder="your@email.com" autocomplete="email" />
         </div>
         <div class="form-group">
           <label class="form-label">Password</label>
@@ -71,9 +71,11 @@
           <input class="form-input" type="password" id="signup-confirm" placeholder="••••••••" autocomplete="new-password" />
         </div>
         <button class="btn btn-primary form-submit" id="btn-signup">Create account</button>
-        <p class="form-footer" style="font-size:0.72rem;line-height:1.5;margin-top:1rem;color:var(--muted)">
-          Your email is only used to prevent duplicate accounts. It is never displayed publicly or shared.
-        </p>
+        <div style="background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:0.85rem 1rem;margin-top:1rem;">
+          <p style="font-size:0.78rem;line-height:1.6;color:var(--muted);margin:0;">
+            <strong style="color:var(--text);">Your email stays private.</strong> It is used only to prevent duplicate accounts and is never visible to anyone. <a href="privacy.html" style="color:var(--accent);font-weight:600;">Read more →</a>
+          </p>
+        </div>
         <p class="form-footer">Already have an account? <a href="#" id="go-login">Log in</a></p>
       </div>
 
