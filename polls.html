@@ -90,7 +90,7 @@
 
         return `
           <div class="poll-option${isChosen ? ' chosen' : ''}"
-               style="cursor:${user && !hasVoted ? 'pointer' : 'default'};"
+               style="cursor:${user ? 'pointer' : 'default'};"
                id="vote-${poll.id}-${i}">
             <div class="poll-option-fill" style="width:${showResults ? pct : 0}%"></div>
             <span class="poll-option-label">${opt}${isChosen ? ' ✓' : ''}</span>
