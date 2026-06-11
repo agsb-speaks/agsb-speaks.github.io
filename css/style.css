@@ -420,6 +420,9 @@ nav {
   font-size: 0.78rem;
   color: var(--muted);
 }
+.poll-option.chosen {
+  border-color: var(--accent);
+}
 
 /* ── petitions page ── */
 .petition-card {

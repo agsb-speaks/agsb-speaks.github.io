@@ -26,67 +26,110 @@
   </div>
 
   <div class="section">
-
-    <div class="petition-card">
-      <span class="card-tag">Open</span>
-      <p class="petition-title">Remove Thursday late start — restore the full timetable</p>
-      <p class="petition-desc">
-        The Thursday late start was introduced without student consultation and has disrupted timetables,
-        transport, and study time. We call on the school to reverse this decision and restore the
-        original timetable, or at minimum hold a transparent student consultation before any further changes.
-      </p>
-      <div class="progress-wrap">
-        <div class="progress-bar"><div class="progress-fill" style="width:63%"></div></div>
-        <div class="progress-label"><span>315 / 500 signatures</span><span>63%</span></div>
-      </div>
-      <div class="petition-actions">
-        <a href="login.html" class="btn btn-primary">Sign this petition</a>
-        <span style="font-size:0.78rem;color:var(--muted)">Closes in 14 days</span>
-      </div>
+    <div id="petitions-list">
+      <p style="color:var(--muted);font-size:0.9rem;">Loading petitions...</p>
     </div>
-
-    <div class="petition-card" style="margin-top:1rem;">
-      <span class="card-tag">Open</span>
-      <p class="petition-title">Introduce a fair appeals process for late detentions</p>
-      <p class="petition-desc">
-        Currently, students have no formal way to appeal a late detention, even when lateness was
-        caused by factors outside their control (transport, illness, prior teacher permission).
-        We ask for a clearly documented appeals procedure accessible to all students.
-      </p>
-      <div class="progress-wrap">
-        <div class="progress-bar"><div class="progress-fill" style="width:41%"></div></div>
-        <div class="progress-label"><span>206 / 500 signatures</span><span>41%</span></div>
-      </div>
-      <div class="petition-actions">
-        <a href="login.html" class="btn btn-primary">Sign this petition</a>
-        <span style="font-size:0.78rem;color:var(--muted)">Closes in 21 days</span>
-      </div>
-    </div>
-
-    <div class="petition-card" style="margin-top:1rem;">
-      <span class="card-tag">Open</span>
-      <p class="petition-title">Publish full survey results to students</p>
-      <p class="petition-desc">
-        Any feedback survey distributed by the school should have its full results published to the
-        student body within 30 days of closing. Transparency about what students said and how the
-        school responded is a basic requirement of genuine consultation.
-      </p>
-      <div class="progress-wrap">
-        <div class="progress-bar"><div class="progress-fill" style="width:29%"></div></div>
-        <div class="progress-label"><span>143 / 500 signatures</span><span>29%</span></div>
-      </div>
-      <div class="petition-actions">
-        <a href="login.html" class="btn btn-primary">Sign this petition</a>
-        <span style="font-size:0.78rem;color:var(--muted)">Closes in 28 days</span>
-      </div>
-    </div>
-
   </div>
 
   <footer>
     <p>AGSB<span>SPEAKS</span> · Independent · Student-run · All data public</p>
   </footer>
 
-  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { supabase } from './js/supabase.js'
+
+    const container = document.getElementById('petitions-list')
+
+    async function loadPetitions() {
+      const { data: petitions, error } = await supabase
+        .from('petitions')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        container.innerHTML = '<p style="color:var(--muted)">Failed to load petitions.</p>'
+        return
+      }
+
+      if (!petitions.length) {
+        container.innerHTML = '<p style="color:var(--muted)">No petitions yet — check back soon.</p>'
+        return
+      }
+
+      const { data: { user } } = await supabase.auth.getUser()
+      let userSigs = new Set()
+      if (user) {
+        const { data: sigs } = await supabase
+          .from('petition_signatures')
+          .select('petition_id')
+          .eq('user_id', user.id)
+        if (sigs) sigs.forEach(s => userSigs.add(s.petition_id))
+      }
+
+      container.innerHTML = petitions.map(p => renderPetition(p, user, userSigs)).join('')
+
+      petitions.forEach(p => {
+        const btn = document.getElementById(`sign-${p.id}`)
+        if (btn) btn.addEventListener('click', () => toggleSign(p.id, userSigs.has(p.id)))
+      })
+    }
+
+    function renderPetition(p, user, userSigs) {
+      const signed = userSigs.has(p.id)
+      const pct = p.goal > 0 ? Math.min(100, Math.round((p.signature_count / p.goal) * 100)) : 0
+
+      let actionBtn
+      if (!user) {
+        actionBtn = `<a href="login.html" class="btn btn-primary">Log in to sign</a>`
+      } else if (p.closed) {
+        actionBtn = `<span style="color:var(--muted);font-size:0.85rem;">This petition is closed</span>`
+      } else if (signed) {
+        actionBtn = `<button class="btn btn-ghost" id="sign-${p.id}" style="border-color:var(--accent);color:var(--accent);">Signed ✓ — withdraw</button>`
+      } else {
+        actionBtn = `<button class="btn btn-primary" id="sign-${p.id}">Sign this petition</button>`
+      }
+
+      return `
+        <div class="petition-card" style="margin-bottom:1rem;">
+          <span class="card-tag">${p.closed ? 'Closed' : 'Open'}</span>
+          <p class="petition-title">${p.title}</p>
+          <p class="petition-desc">${p.description}</p>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+            <div class="progress-label">
+              <span>${p.signature_count.toLocaleString()} / ${p.goal.toLocaleString()} signatures</span>
+              <span>${pct}%</span>
+            </div>
+          </div>
+          <div class="petition-actions">${actionBtn}</div>
+        </div>
+      `
+    }
+
+    async function toggleSign(petitionId, alreadySigned) {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { window.location.href = 'login.html'; return }
+
+      if (alreadySigned) {
+        await supabase
+          .from('petition_signatures')
+          .delete()
+          .eq('petition_id', petitionId)
+          .eq('user_id', user.id)
+        await supabase.rpc('decrement_signature', { petition_id: petitionId })
+      } else {
+        const { error } = await supabase
+          .from('petition_signatures')
+          .insert({ petition_id: petitionId, user_id: user.id })
+        if (!error) {
+          await supabase.rpc('increment_signature', { petition_id: petitionId })
+        }
+      }
+
+      loadPetitions()
+    }
+
+    loadPetitions()
+  </script>
 </body>
 </html>
