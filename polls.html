@@ -124,18 +124,10 @@
 
       const { data: existing } = await supabase
         .from('poll_votes')
-        .select('id')
+        .select('id, option_index')
         .eq('poll_id', pollId)
         .eq('user_id', user.id)
         .maybeSingle()
-
-      if (existing) return
-
-      const { error: voteError } = await supabase
-        .from('poll_votes')
-        .insert({ poll_id: pollId, user_id: user.id, option_index: optionIndex })
-
-      if (voteError) return
 
       const { data: poll } = await supabase
         .from('polls')
@@ -144,7 +136,26 @@
         .single()
 
       const newVotes = [...poll.votes]
-      newVotes[optionIndex] += 1
+
+      if (existing) {
+        // same option clicked — do nothing
+        if (existing.option_index === optionIndex) return
+
+        // remove old vote, add new one
+        newVotes[existing.option_index] = Math.max(0, newVotes[existing.option_index] - 1)
+        newVotes[optionIndex] += 1
+
+        await supabase
+          .from('poll_votes')
+          .update({ option_index: optionIndex })
+          .eq('id', existing.id)
+      } else {
+        newVotes[optionIndex] += 1
+
+        await supabase
+          .from('poll_votes')
+          .insert({ poll_id: pollId, user_id: user.id, option_index: optionIndex })
+      }
 
       await supabase
         .from('polls')
