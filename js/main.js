@@ -1,46 +1,54 @@
+import { supabase } from '../supabase.js'
+
 // ── nav active state ──
 (function () {
-  const links = document.querySelectorAll('.nav-links a');
-  const path = window.location.pathname.split('/').pop() || 'index.html';
+  const links = document.querySelectorAll('.nav-links a')
+  const path = window.location.pathname.split('/').pop() || 'index.html'
   links.forEach(a => {
-    if (a.getAttribute('href') === path) a.classList.add('active');
-  });
+    if (a.getAttribute('href') === path) a.classList.add('active')
+  })
 
-  // hamburger
-  const toggle = document.querySelector('.nav-toggle');
-  const navLinks = document.querySelector('.nav-links');
+  const toggle = document.querySelector('.nav-toggle')
+  const navLinks = document.querySelector('.nav-links')
   if (toggle && navLinks) {
-    toggle.addEventListener('click', () => {
-      navLinks.classList.toggle('open');
-    });
+    toggle.addEventListener('click', () => navLinks.classList.toggle('open'))
   }
-})();
+})()
 
 // ── toast ──
-function showToast(msg, type = 'default') {
-  let container = document.querySelector('.toast-container');
+export function showToast(msg, type = 'default') {
+  let container = document.querySelector('.toast-container')
   if (!container) {
-    container = document.createElement('div');
-    container.className = 'toast-container';
-    document.body.appendChild(container);
+    container = document.createElement('div')
+    container.className = 'toast-container'
+    document.body.appendChild(container)
   }
-  const toast = document.createElement('div');
-  toast.className = 'toast' + (type === 'error' ? ' error' : '');
-  toast.textContent = msg;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3200);
+  const toast = document.createElement('div')
+  toast.className = 'toast' + (type === 'error' ? ' error' : '')
+  toast.textContent = msg
+  container.appendChild(toast)
+  setTimeout(() => toast.remove(), 3200)
 }
 
-// ── auth guard (placeholder until Supabase) ──
-function requireAuth(redirectTo = 'login.html') {
-  // Will check Supabase session when wired up
-  const fakeUser = sessionStorage.getItem('agsb_user');
-  if (!fakeUser) {
-    window.location.href = redirectTo;
+// ── get current user ──
+export async function getUser() {
+  const { data: { user } } = await supabase.auth.getUser()
+  return user
+}
+
+// ── update nav based on auth state ──
+async function updateNav() {
+  const user = await getUser()
+  const joinLink = document.querySelector('.nav-cta')
+  if (joinLink && user) {
+    joinLink.textContent = 'Sign out'
+    joinLink.href = '#'
+    joinLink.addEventListener('click', async (e) => {
+      e.preventDefault()
+      await supabase.auth.signOut()
+      window.location.reload()
+    })
   }
 }
 
-function getUser() {
-  const u = sessionStorage.getItem('agsb_user');
-  return u ? JSON.parse(u) : null;
-}
+updateNav()
