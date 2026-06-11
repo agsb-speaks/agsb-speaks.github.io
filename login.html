@@ -25,9 +25,9 @@
       <p class="auth-sub">One account. All polls, petitions, and articles.</p>
 
       <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Log in</button>
-        <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Sign up</button>
-      </div>
+      <button class="auth-tab active" id="tab-login">Log in</button>
+      <button class="auth-tab" id="tab-signup">Sign up</button>
+    </div>
 
       <!-- login form -->
       <div id="form-login">
@@ -39,8 +39,8 @@
           <label class="form-label">Password</label>
           <input class="form-input" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
         </div>
-        <button class="btn btn-primary form-submit" onclick="handleLogin()">Log in</button>
-        <p class="form-footer">No account? <a href="#" onclick="switchTab('signup')">Sign up</a></p>
+        <button class="btn btn-primary form-submit" id="btn-login">Log in</button>
+        <p class="form-footer">No account? <a href="#" id="go-signup">Sign up</a></p>
       </div>
 
       <!-- signup form -->
@@ -70,26 +70,18 @@
           <label class="form-label">Confirm password</label>
           <input class="form-input" type="password" id="signup-confirm" placeholder="••••••••" autocomplete="new-password" />
         </div>
-        <button class="btn btn-primary form-submit" onclick="handleSignup()">Create account</button>
+        <button class="btn btn-primary form-submit" id="btn-signup">Create account</button>
         <p class="form-footer" style="font-size:0.72rem;line-height:1.5;margin-top:1rem;color:var(--muted)">
           Your email is only used to prevent duplicate accounts. It is never displayed publicly or shared.
         </p>
-        <p class="form-footer">Already have an account? <a href="#" onclick="switchTab('login')">Log in</a></p>
+        <p class="form-footer">Already have an account? <a href="#" id="go-login">Log in</a></p>
       </div>
 
     </div>
   </div>
 
-   <script type="module">
+<script type="module">
     import { supabase } from './supabase.js'
-
-    function switchTab(tab) {
-      document.getElementById('form-login').style.display  = tab === 'login'  ? 'block' : 'none'
-      document.getElementById('form-signup').style.display = tab === 'signup' ? 'block' : 'none'
-      document.getElementById('tab-login').classList.toggle('active',  tab === 'login')
-      document.getElementById('tab-signup').classList.toggle('active', tab === 'signup')
-    }
-    window.switchTab = switchTab
 
     function showToast(msg, type = 'default') {
       let container = document.querySelector('.toast-container')
@@ -105,6 +97,13 @@
       setTimeout(() => toast.remove(), 3200)
     }
 
+    function switchTab(tab) {
+      document.getElementById('form-login').style.display  = tab === 'login'  ? 'block' : 'none'
+      document.getElementById('form-signup').style.display = tab === 'signup' ? 'block' : 'none'
+      document.getElementById('tab-login').classList.toggle('active',  tab === 'login')
+      document.getElementById('tab-signup').classList.toggle('active', tab === 'signup')
+    }
+
     async function handleLogin() {
       const email = document.getElementById('login-email').value.trim()
       const pass  = document.getElementById('login-password').value
@@ -113,7 +112,6 @@
       if (error) { showToast(error.message, 'error'); return }
       window.location.href = 'index.html'
     }
-    window.handleLogin = handleLogin
 
     async function handleSignup() {
       const email   = document.getElementById('signup-email').value.trim()
@@ -128,7 +126,13 @@
       await supabase.from('profiles').insert({ id: data.user.id, year_group: parseInt(year) })
       showToast('Account created! Check your email to confirm.')
     }
-    window.handleSignup = handleSignup
-  </script>
+
+    document.getElementById('tab-login').addEventListener('click', () => switchTab('login'))
+    document.getElementById('tab-signup').addEventListener('click', () => switchTab('signup'))
+    document.getElementById('go-signup').addEventListener('click', (e) => { e.preventDefault(); switchTab('signup') })
+    document.getElementById('go-login').addEventListener('click', (e) => { e.preventDefault(); switchTab('login') })
+    document.getElementById('btn-login').addEventListener('click', handleLogin)
+    document.getElementById('btn-signup').addEventListener('click', handleSignup)
+</script>
 </body>
 </html>
