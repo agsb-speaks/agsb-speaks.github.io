@@ -27,94 +27,7 @@
 
   <div class="section">
     <div id="polls-list">
-
-      <div class="poll-card" style="margin-bottom:1rem;">
-        <p class="card-tag" style="margin-bottom:0.75rem;">Active</p>
-        <p class="poll-question">Has the phone policy improved your learning experience?</p>
-        <div class="poll-options">
-          <label class="poll-option">
-            <input type="radio" name="p1" value="0" />
-            <div class="poll-option-fill" style="width:12%"></div>
-            <span class="poll-option-label">Yes, it helps me focus</span>
-            <span class="poll-option-pct">12%</span>
-          </label>
-          <label class="poll-option">
-            <input type="radio" name="p1" value="1" />
-            <div class="poll-option-fill" style="width:71%"></div>
-            <span class="poll-option-label">No, it makes no difference</span>
-            <span class="poll-option-pct">71%</span>
-          </label>
-          <label class="poll-option">
-            <input type="radio" name="p1" value="2" />
-            <div class="poll-option-fill" style="width:17%"></div>
-            <span class="poll-option-label">It's made things worse</span>
-            <span class="poll-option-pct">17%</span>
-          </label>
-        </div>
-        <div class="poll-footer">
-          <span>247 total votes · closes in 4 days</span>
-          <a href="login.html" class="btn btn-primary" style="padding:0.35rem 0.9rem;font-size:0.78rem;">Log in to vote</a>
-        </div>
-      </div>
-
-      <div class="poll-card" style="margin-bottom:1rem;">
-        <p class="card-tag" style="margin-bottom:0.75rem;">Active</p>
-        <p class="poll-question">Should the Thursday late start be reversed?</p>
-        <div class="poll-options">
-          <label class="poll-option">
-            <input type="radio" name="p2" value="0" />
-            <div class="poll-option-fill" style="width:84%"></div>
-            <span class="poll-option-label">Yes — bring back the original timetable</span>
-            <span class="poll-option-pct">84%</span>
-          </label>
-          <label class="poll-option">
-            <input type="radio" name="p2" value="1" />
-            <div class="poll-option-fill" style="width:9%"></div>
-            <span class="poll-option-label">No — I prefer the late start</span>
-            <span class="poll-option-pct">9%</span>
-          </label>
-          <label class="poll-option">
-            <input type="radio" name="p2" value="2" />
-            <div class="poll-option-fill" style="width:7%"></div>
-            <span class="poll-option-label">No opinion</span>
-            <span class="poll-option-pct">7%</span>
-          </label>
-        </div>
-        <div class="poll-footer">
-          <span>189 total votes · closes in 6 days</span>
-          <a href="login.html" class="btn btn-primary" style="padding:0.35rem 0.9rem;font-size:0.78rem;">Log in to vote</a>
-        </div>
-      </div>
-
-      <div class="poll-card" style="margin-bottom:1rem;">
-        <p class="card-tag" style="margin-bottom:0.75rem;">Active</p>
-        <p class="poll-question">Do you feel students are meaningfully consulted before new rules are introduced?</p>
-        <div class="poll-options">
-          <label class="poll-option">
-            <input type="radio" name="p3" value="0" />
-            <div class="poll-option-fill" style="width:4%"></div>
-            <span class="poll-option-label">Yes, always</span>
-            <span class="poll-option-pct">4%</span>
-          </label>
-          <label class="poll-option">
-            <input type="radio" name="p3" value="1" />
-            <div class="poll-option-fill" style="width:11%"></div>
-            <span class="poll-option-label">Sometimes</span>
-            <span class="poll-option-pct">11%</span>
-          </label>
-          <label class="poll-option">
-            <input type="radio" name="p3" value="2" />
-            <div class="poll-option-fill" style="width:85%"></div>
-            <span class="poll-option-label">Never</span>
-            <span class="poll-option-pct">85%</span>
-          </label>
-        </div>
-        <div class="poll-footer">
-          <span>228 total votes · closes in 9 days</span>
-          <a href="login.html" class="btn btn-primary" style="padding:0.35rem 0.9rem;font-size:0.78rem;">Log in to vote</a>
-        </div>
-      </div>
-
+      <p style="color:var(--muted);font-size:0.9rem;">Loading polls...</p>
     </div>
   </div>
 
@@ -122,6 +35,126 @@
     <p>AGSB<span>SPEAKS</span> · Independent · Student-run · All data public</p>
   </footer>
 
-  <script type="module" src="js/main.js"></script>
+  <script type="module">
+    import { supabase } from './js/supabase.js'
+
+    const container = document.getElementById('polls-list')
+
+    async function loadPolls() {
+      const { data: polls, error } = await supabase
+        .from('polls')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        container.innerHTML = '<p style="color:var(--muted)">Failed to load polls.</p>'
+        return
+      }
+
+      if (!polls.length) {
+        container.innerHTML = '<p style="color:var(--muted)">No polls yet — check back soon.</p>'
+        return
+      }
+
+      const { data: { user } } = await supabase.auth.getUser()
+      let userVotes = {}
+      if (user) {
+        const { data: votes } = await supabase
+          .from('poll_votes')
+          .select('poll_id, option_index')
+          .eq('user_id', user.id)
+        if (votes) votes.forEach(v => { userVotes[v.poll_id] = v.option_index })
+      }
+
+      container.innerHTML = polls.map(poll => renderPoll(poll, user, userVotes)).join('')
+
+      polls.forEach(poll => {
+        if (!user || userVotes[poll.id] !== undefined) return
+        poll.options.forEach((_, i) => {
+          const btn = document.getElementById(`vote-${poll.id}-${i}`)
+          if (btn) btn.addEventListener('click', () => castVote(poll.id, i))
+        })
+      })
+    }
+
+    function renderPoll(poll, user, userVotes) {
+      const totalVotes = poll.votes.reduce((a, b) => a + b, 0)
+      const hasVoted = userVotes[poll.id] !== undefined
+      const userChoice = userVotes[poll.id]
+
+      const options = poll.options.map((opt, i) => {
+        const count = poll.votes[i] || 0
+        const pct = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0
+        const isChosen = hasVoted && userChoice === i
+        const showResults = hasVoted || !user
+
+        return `
+          <div class="poll-option${isChosen ? ' chosen' : ''}"
+               style="cursor:${user && !hasVoted ? 'pointer' : 'default'};"
+               id="vote-${poll.id}-${i}">
+            <div class="poll-option-fill" style="width:${showResults ? pct : 0}%"></div>
+            <span class="poll-option-label">${opt}${isChosen ? ' ✓' : ''}</span>
+            <span class="poll-option-pct">${showResults ? pct + '%' : ''}</span>
+          </div>
+        `
+      }).join('')
+
+      let footer
+      if (!user) {
+        footer = `<span>${totalVotes} vote${totalVotes !== 1 ? 's' : ''}</span><a href="login.html" class="btn btn-primary" style="padding:0.35rem 0.9rem;font-size:0.78rem;">Log in to vote</a>`
+      } else if (hasVoted) {
+        footer = `<span>${totalVotes} vote${totalVotes !== 1 ? 's' : ''}</span><span style="color:var(--accent);font-size:0.78rem;">Vote recorded ✓</span>`
+      } else {
+        footer = `<span>${totalVotes} vote${totalVotes !== 1 ? 's' : ''}</span><span style="color:var(--muted);font-size:0.78rem;">Click an option to vote</span>`
+      }
+
+      return `
+        <div class="poll-card" style="margin-bottom:1rem;">
+          <p class="card-tag" style="margin-bottom:0.75rem;">${poll.closed ? 'Closed' : 'Active'}</p>
+          <p class="poll-question">${poll.question}</p>
+          <div class="poll-options">${options}</div>
+          <div class="poll-footer">${footer}</div>
+        </div>
+      `
+    }
+
+    async function castVote(pollId, optionIndex) {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { window.location.href = 'login.html'; return }
+
+      const { data: existing } = await supabase
+        .from('poll_votes')
+        .select('id')
+        .eq('poll_id', pollId)
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      if (existing) return
+
+      const { error: voteError } = await supabase
+        .from('poll_votes')
+        .insert({ poll_id: pollId, user_id: user.id, option_index: optionIndex })
+
+      if (voteError) return
+
+      const { data: poll } = await supabase
+        .from('polls')
+        .select('votes')
+        .eq('id', pollId)
+        .single()
+
+      const newVotes = [...poll.votes]
+      newVotes[optionIndex] += 1
+
+      await supabase
+        .from('polls')
+        .update({ votes: newVotes })
+        .eq('id', pollId)
+
+      loadPolls()
+    }
+
+    loadPolls()
+  </script>
 </body>
 </html>
