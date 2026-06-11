@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy · AGSB Speaks</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .privacy-body {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+    .privacy-body h2 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 2.5rem 0 0.75rem;
+      color: var(--text);
+    }
+    .privacy-body p {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #d0d0d0;
+      margin-bottom: 1.25rem;
+    }
+    .privacy-body strong { color: var(--text); font-weight: 600; }
+    .privacy-body a { color: var(--accent); }
+    .privacy-body a:hover { text-decoration: underline; }
+
+    .privacy-hero {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+    .privacy-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 0.75rem;
+    }
+    .privacy-hero p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      max-width: 500px;
+    }
+
+    .fact-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #d0d0d0;
+    }
+    .fact-block strong { color: var(--text); }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-logo">AGSB<span>SPEAKS</span></span>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="polls.html">Polls</a></li>
+      <li><a href="petitions.html">Petitions</a></li>
+      <li><a href="articles.html">Articles</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="login.html" class="nav-cta">Join</a></li>
+    </ul>
+    <div class="nav-toggle"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="privacy-hero">
+    <div class="hero-eyebrow">Privacy</div>
+    <h1>We take privacy<br><em>seriously.</em></h1>
+    <p>We are anonymous ourselves. We built this platform knowing exactly what is at stake when your identity ends up in the wrong hands. Here is precisely what we collect, what we don't, and why you can trust us.</p>
+  </div>
+
+  <div class="privacy-body">
+
+    <h2>Why privacy matters to us personally</h2>
+    <p>
+      The people behind AGSB Speaks are anonymous for a reason. We have seen what happens when students speak up through official channels — concerns get dismissed, and the students who raised them become targets. We built this platform anonymously to protect ourselves, and we have applied that same thinking to every decision about how your data is handled.
+    </p>
+    <p>
+      We are not a company. We are not trying to sell you anything. We have no interest in your personal information beyond what is strictly necessary to make the platform work fairly.
+    </p>
+
+    <hr class="divider" />
+
+    <h2>What we collect and why</h2>
+    <p>
+      When you create an account, we ask for an email address and your year group. That is it.
+    </p>
+    <p>
+      <strong>Your email</strong> exists for one reason: to make sure each person only has one account. Without it, someone could vote fifty times and the data would be meaningless. Your email is never shown publicly, never used to contact you without your consent, and never shared with anyone — including the school.
+    </p>
+    <p>
+      <strong>Your year group</strong> is context that helps us understand whether different year groups feel differently about an issue. It is never used to identify you.
+    </p>
+
+    <div class="fact-block">
+      <strong>We do not collect your name, your form group, your student ID, or anything else.</strong> We have no way of knowing who you are beyond an email address — and we have deliberately kept it that way.
+    </div>
+
+    <hr class="divider" />
+
+    <h2>How your votes and signatures are stored</h2>
+    <p>
+      This is the part most people don't think about, so we want to be specific.
+    </p>
+    <p>
+      When you vote on a poll or sign a petition, your action is recorded in our database. But it is not recorded as <em>"Bob voted for option B"</em>. It is recorded as a random, system-generated token — a long string of characters like <code style="background:var(--surface);padding:0.1rem 0.4rem;border-radius:2px;font-size:0.82rem;">a3f7c2d1-...</code> — linked to that vote. That token is your user ID, generated automatically when you signed up. It has no connection to your name or email unless someone has direct, privileged access to the database and actively cross-references both tables.
+    </p>
+    <p>
+      <strong>In practice, this means:</strong> the only thing publicly visible is the total count. Nobody — not us, not the school, not anyone looking at the results page — can see that a specific person voted a specific way. The individual vote exists in the database purely to prevent you from voting twice.
+    </p>
+
+    <div class="fact-block">
+      <strong>Even we cannot see how a specific person voted.</strong> We see numbers. We see percentages. We do not see names next to choices.
+    </div>
+
+    <hr class="divider" />
+
+    <h2>What the school can and cannot see</h2>
+    <p>
+      The school has no access to our database, our platform, or any of the data within it. We do not share data with the school. When we present findings — poll results, petition counts — we present aggregated numbers only. No individual responses, no identifying information.
+    </p>
+    <p>
+      <strong>The school cannot find out how you voted. The school cannot find out if you signed a petition.</strong> The only thing the school will ever see is what we choose to publish publicly, which is always totals and percentages, nothing more.
+    </p>
+
+    <hr class="divider" />
+
+    <h2>Who runs the database</h2>
+    <p>
+      Our data is stored with <a href="https://supabase.com" target="_blank">Supabase</a>, a reputable, open-source database platform used by thousands of legitimate organisations worldwide. Data is stored on secure servers and is not accessible to third parties. Supabase's own privacy practices are available on their website.
+    </p>
+    <p>
+      We are the only people with admin access to the database. That is a group of students, operating anonymously, with no intention of ever monetising or misusing this data.
+    </p>
+
+    <hr class="divider" />
+
+    <h2>Your right to be removed</h2>
+    <p>
+      If you want your account and all associated data deleted, email us at <a href="mailto:agsbspeaks@gmail.com">agsbspeaks@gmail.com</a> and we will remove everything within 7 days. No questions asked.
+    </p>
+
+  </div>
+
+  <footer>
+    <p>AGSB<span style="color:var(--accent)">SPEAKS</span> · Independent · Student-run · All data public</p>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
