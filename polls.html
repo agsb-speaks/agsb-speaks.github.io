@@ -118,7 +118,7 @@
       `
     }
 
-    async function castVote(pollId, optionIndex) {
+async function castVote(pollId, optionIndex) {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { window.location.href = 'login.html'; return }
 
@@ -129,38 +129,15 @@
         .eq('user_id', user.id)
         .maybeSingle()
 
-      const { data: poll } = await supabase
-        .from('polls')
-        .select('votes')
-        .eq('id', pollId)
-        .single()
-
-      const newVotes = [...poll.votes]
-
       if (existing) {
-        // same option clicked — do nothing
         if (existing.option_index === optionIndex) return
-
-        // remove old vote, add new one
-        newVotes[existing.option_index] = Math.max(0, newVotes[existing.option_index] - 1)
-        newVotes[optionIndex] += 1
-
-        await supabase
-          .from('poll_votes')
-          .update({ option_index: optionIndex })
-          .eq('id', existing.id)
+        await supabase.rpc('decrement_vote', { poll_id: pollId, option_idx: existing.option_index })
+        await supabase.rpc('increment_vote', { poll_id: pollId, option_idx: optionIndex })
+        await supabase.from('poll_votes').update({ option_index: optionIndex }).eq('id', existing.id)
       } else {
-        newVotes[optionIndex] += 1
-
-        await supabase
-          .from('poll_votes')
-          .insert({ poll_id: pollId, user_id: user.id, option_index: optionIndex })
+        await supabase.rpc('increment_vote', { poll_id: pollId, option_idx: optionIndex })
+        await supabase.from('poll_votes').insert({ poll_id: pollId, user_id: user.id, option_index: optionIndex })
       }
-
-      await supabase
-        .from('polls')
-        .update({ votes: newVotes })
-        .eq('id', pollId)
 
       loadPolls()
     }
