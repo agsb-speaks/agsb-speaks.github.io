@@ -66,7 +66,10 @@
         if (sigs) sigs.forEach(s => userSigs.add(s.petition_id))
       }
 
-      container.innerHTML = petitions.map(p => renderPetition(p, user, userSigs)).join('')
+      const { data: countData } = await supabase.rpc('get_user_count')
+      const totalUsers = countData || 1
+
+      container.innerHTML = petitions.map(p => renderPetition(p, user, userSigs, totalUsers)).join('')
 
       petitions.forEach(p => {
         const btn = document.getElementById(`sign-${p.id}`)
@@ -74,9 +77,9 @@
       })
     }
 
-    function renderPetition(p, user, userSigs) {
+    function renderPetition(p, user, userSigs, totalUsers) {
       const signed = userSigs.has(p.id)
-      const pct = p.goal > 0 ? Math.min(100, Math.round((p.signature_count / p.goal) * 100)) : 0
+      const pct = totalUsers > 0 ? Math.round((p.signature_count / totalUsers) * 100) : 0
 
       let actionBtn
       if (!user) {
@@ -97,8 +100,8 @@
           <div class="progress-wrap">
             <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
             <div class="progress-label">
-              <span>${p.signature_count.toLocaleString()} / ${p.goal.toLocaleString()} signatures</span>
-              <span>${pct}%</span>
+              <span>${p.signature_count.toLocaleString()} signatures</span>
+              <span>${pct}% of users</span>
             </div>
           </div>
           <div class="petition-actions">${actionBtn}</div>
