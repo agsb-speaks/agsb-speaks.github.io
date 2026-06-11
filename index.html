@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGSB Speaks</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- nav -->
+  <nav>
+    <span class="nav-logo">AGSB<span>SPEAKS</span></span>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="polls.html">Polls</a></li>
+      <li><a href="petitions.html">Petitions</a></li>
+      <li><a href="articles.html">Articles</a></li>
+      <li><a href="login.html" class="nav-cta">Join</a></li>
+    </ul>
+    <div class="nav-toggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- ticker -->
+  <div class="ticker-wrap">
+    <span class="ticker-inner">
+      &nbsp;&nbsp;&nbsp;YOUR SCHOOL. YOUR VOICE. YOUR DATA. &nbsp;·&nbsp;
+      ANONYMOUS &nbsp;·&nbsp; STUDENT-RUN &nbsp;·&nbsp; 100% INDEPENDENT &nbsp;·&nbsp;
+      SIGN. POLL. SPEAK. &nbsp;·&nbsp; YOUR SCHOOL. YOUR VOICE. YOUR DATA. &nbsp;·&nbsp;
+      ANONYMOUS &nbsp;·&nbsp; STUDENT-RUN &nbsp;·&nbsp; 100% INDEPENDENT &nbsp;·&nbsp;
+    </span>
+  </div>
+
+  <!-- hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">Student voice platform</div>
+    <h1>The school<br>should <em>listen.</em></h1>
+    <p class="hero-sub">
+      AGSB Speaks is an independent, student-run platform for polls,
+      petitions, and opinion. Every result is public. Every voice counts.
+    </p>
+    <div class="hero-actions">
+      <a href="polls.html" class="btn btn-primary">See live polls</a>
+      <a href="petitions.html" class="btn btn-ghost">Sign a petition</a>
+    </div>
+  </div>
+
+  <!-- stat strip -->
+  <div class="stat-strip">
+    <div class="stat-strip-inner">
+      <div class="stat">
+        <span class="stat-num" id="stat-votes">—</span>
+        <span class="stat-label">Votes cast</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-sigs">—</span>
+        <span class="stat-label">Petition signatures</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-polls">—</span>
+        <span class="stat-label">Active polls</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="stat-members">—</span>
+        <span class="stat-label">Members</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- featured poll -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Featured poll</h2>
+      <a href="polls.html" class="section-link">All polls →</a>
+    </div>
+    <div id="featured-poll">
+      <!-- injected by JS -->
+      <div class="poll-card">
+        <p class="poll-question">Has the phone policy improved your learning experience?</p>
+        <div class="poll-options">
+          <label class="poll-option">
+            <input type="radio" name="fp" value="0" />
+            <div class="poll-option-fill" style="width:12%"></div>
+            <span class="poll-option-label">Yes, it helps me focus</span>
+            <span class="poll-option-pct">12%</span>
+          </label>
+          <label class="poll-option">
+            <input type="radio" name="fp" value="1" />
+            <div class="poll-option-fill" style="width:71%"></div>
+            <span class="poll-option-label">No, it makes no difference</span>
+            <span class="poll-option-pct">71%</span>
+          </label>
+          <label class="poll-option">
+            <input type="radio" name="fp" value="2" />
+            <div class="poll-option-fill" style="width:17%"></div>
+            <span class="poll-option-label">It's made things worse</span>
+            <span class="poll-option-pct">17%</span>
+          </label>
+        </div>
+        <div class="poll-footer">
+          <span>247 votes · closes in 4 days</span>
+          <a href="login.html" class="btn btn-primary" style="padding:0.35rem 0.9rem;font-size:0.78rem;">Vote</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- latest petitions -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Latest petitions</h2>
+      <a href="petitions.html" class="section-link">All petitions →</a>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <span class="card-tag">Petition</span>
+        <p class="card-title">Remove Thursday late start — restore full timetable</p>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:63%"></div></div>
+          <div class="progress-label"><span>315 / 500 signatures</span><span>63%</span></div>
+        </div>
+        <p class="card-meta"><a href="petitions.html" style="color:var(--accent)">Sign →</a></p>
+      </div>
+      <div class="card">
+        <span class="card-tag">Petition</span>
+        <p class="card-title">Review late detention policy — a fair appeals process</p>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:41%"></div></div>
+          <div class="progress-label"><span>206 / 500 signatures</span><span>41%</span></div>
+        </div>
+        <p class="card-meta"><a href="petitions.html" style="color:var(--accent)">Sign →</a></p>
+      </div>
+      <div class="card">
+        <span class="card-tag">Petition</span>
+        <p class="card-title">Publish the data: release full survey results to students</p>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:29%"></div></div>
+          <div class="progress-label"><span>143 / 500 signatures</span><span>29%</span></div>
+        </div>
+        <p class="card-meta"><a href="petitions.html" style="color:var(--accent)">Sign →</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- latest articles -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Latest articles</h2>
+      <a href="articles.html" class="section-link">All articles →</a>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <span class="card-tag">Opinion</span>
+        <p class="card-title">The data is clear: students weren't consulted on the phone policy</p>
+        <p class="card-meta">Published anonymously · 3 days ago</p>
+      </div>
+      <div class="card">
+        <span class="card-tag">Analysis</span>
+        <p class="card-title">Thursday late start: who decided, and why we weren't asked</p>
+        <p class="card-meta">Published anonymously · 1 week ago</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>AGSB<span>SPEAKS</span> · Independent · Student-run · All data public</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // animate stats up on load (placeholder numbers, will be real from Supabase)
+    const stats = [
+      { id: 'stat-votes',   end: 664,  suffix: '' },
+      { id: 'stat-sigs',    end: 664,  suffix: '' },
+      { id: 'stat-polls',   end: 5,    suffix: '' },
+      { id: 'stat-members', end: 312,  suffix: '' },
+    ];
+    stats.forEach(({ id, end }) => {
+      const el = document.getElementById(id);
+      let n = 0;
+      const step = Math.ceil(end / 40);
+      const t = setInterval(() => {
+        n = Math.min(n + step, end);
+        el.textContent = n.toLocaleString();
+        if (n >= end) clearInterval(t);
+      }, 30);
+    });
+  </script>
+</body>
+</html>

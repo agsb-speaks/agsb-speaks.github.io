@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join · AGSB Speaks</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav>
+    <span class="nav-logo">AGSB<span>SPEAKS</span></span>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="polls.html">Polls</a></li>
+      <li><a href="petitions.html">Petitions</a></li>
+      <li><a href="articles.html">Articles</a></li>
+    </ul>
+    <div class="nav-toggle"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <p class="auth-title">AGSB<span style="color:var(--accent)">SPEAKS</span></p>
+      <p class="auth-sub">One account. All polls, petitions, and articles.</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Log in</button>
+        <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Sign up</button>
+      </div>
+
+      <!-- login form -->
+      <div id="form-login">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="login-email" placeholder="your@email.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <button class="btn btn-primary form-submit" onclick="handleLogin()">Log in</button>
+        <p class="form-footer">No account? <a href="#" onclick="switchTab('signup')">Sign up</a></p>
+      </div>
+
+      <!-- signup form -->
+      <div id="form-signup" style="display:none;">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="signup-email" placeholder="your@email.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Year group</label>
+          <select class="form-select" id="signup-year">
+            <option value="" disabled selected>Select your year</option>
+            <option value="7">Year 7</option>
+            <option value="8">Year 8</option>
+            <option value="9">Year 9</option>
+            <option value="10">Year 10</option>
+            <option value="11">Year 11</option>
+            <option value="12">Year 12</option>
+            <option value="13">Year 13</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="signup-password" placeholder="min. 8 characters" autocomplete="new-password" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm password</label>
+          <input class="form-input" type="password" id="signup-confirm" placeholder="••••••••" autocomplete="new-password" />
+        </div>
+        <button class="btn btn-primary form-submit" onclick="handleSignup()">Create account</button>
+        <p class="form-footer" style="font-size:0.72rem;line-height:1.5;margin-top:1rem;color:var(--muted)">
+          Your email is only used to prevent duplicate accounts. It is never displayed publicly or shared.
+        </p>
+        <p class="form-footer">Already have an account? <a href="#" onclick="switchTab('login')">Log in</a></p>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    function switchTab(tab) {
+      document.getElementById('form-login').style.display  = tab === 'login'  ? 'block' : 'none';
+      document.getElementById('form-signup').style.display = tab === 'signup' ? 'block' : 'none';
+      document.getElementById('tab-login').classList.toggle('active',  tab === 'login');
+      document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+    }
+
+    function handleLogin() {
+      const email = document.getElementById('login-email').value.trim();
+      const pass  = document.getElementById('login-password').value;
+      if (!email || !pass) { showToast('Fill in all fields', 'error'); return; }
+      // TODO: replace with Supabase auth
+      showToast('Supabase not connected yet — coming soon');
+    }
+
+    function handleSignup() {
+      const email   = document.getElementById('signup-email').value.trim();
+      const year    = document.getElementById('signup-year').value;
+      const pass    = document.getElementById('signup-password').value;
+      const confirm = document.getElementById('signup-confirm').value;
+      if (!email || !year || !pass || !confirm) { showToast('Fill in all fields', 'error'); return; }
+      if (pass !== confirm) { showToast('Passwords do not match', 'error'); return; }
+      if (pass.length < 8) { showToast('Password must be at least 8 characters', 'error'); return; }
+      // TODO: replace with Supabase auth
+      showToast('Supabase not connected yet — coming soon');
+    }
+  </script>
+</body>
+</html>
