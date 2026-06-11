@@ -69,7 +69,7 @@
       container.innerHTML = polls.map(poll => renderPoll(poll, user, userVotes)).join('')
 
       polls.forEach(poll => {
-        if (!user || userVotes[poll.id] !== undefined) return
+        if (!user) return
         poll.options.forEach((_, i) => {
           const btn = document.getElementById(`vote-${poll.id}-${i}`)
           if (btn) btn.addEventListener('click', () => castVote(poll.id, i))
