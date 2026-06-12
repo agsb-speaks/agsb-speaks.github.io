@@ -641,7 +641,7 @@ footer span { color: var(--accent); }
 
 /* ── responsive ── */
 @media (max-width: 640px) {
-  .nav-links, .nav-cta { display: none; }
+  .nav-links { display: none; }
   .nav-toggle { display: flex; }
   .nav-links.open {
     display: flex;
@@ -653,8 +653,9 @@ footer span { color: var(--accent); }
     padding: 1rem 1.5rem;
     gap: 0.25rem;
   }
-  .nav-links.open .nav-cta-mobile {
+  .nav-links.open .nav-cta {
     display: block;
+    text-align: center;
     margin-top: 0.5rem;
   }
   .stat-strip-inner { gap: 1.5rem; }
